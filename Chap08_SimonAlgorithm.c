@@ -1,11 +1,22 @@
 // Simon Algorithm
+#include <stdio.h>
 
-int getTransition(char *x, int m, int p, List L[], char c) {
+#define XSIZE 256
+struct _cell
+{
+    int element;
+    struct _cell *next;
+};
+typedef struct _cell *List;
+
+int getTransition(char *x, int m, int p, List L[], char c)
+{
     List cell;
 
     if (p < m - 1 && x[p + 1] == c)
         return (p + 1);
-    else if (p > -1) {
+    else if (p > -1)
+    {
         cell = L[p];
         while (cell != NULL)
             if (x[cell->element] == c)
@@ -13,12 +24,15 @@ int getTransition(char *x, int m, int p, List L[], char c) {
             else
                 cell = cell->next;
         return (-1);
-    } else {
+    }
+    else
+    {
         return (-1);
     }
 }
 
-void setTransition(int p, int q, List L[]) {
+void setTransition(int p, int q, List L[])
+{
     List cell;
 
     cell = (List)malloc(sizeof(struct _cell));
@@ -29,13 +43,15 @@ void setTransition(int p, int q, List L[]) {
     L[p] = cell;
 }
 
-int preSimon(char *x, int m, List L[]) {
+int preSimon(char *x, int m, List L[])
+{
     int i, k, ell;
     List cell;
 
-    memset(L, NULL, (m - 2)*sizeof(List));
+    memset(L, NULL, (m - 2) * sizeof(List));
     ell = -1;
-    for (i = 1; i < m; ++i) {
+    for (i = 1; i < m; ++i)
+    {
         k = ell;
         cell = (ell == 1 ? NULL : L[k]);
         ell = -1;
@@ -43,7 +59,8 @@ int preSimon(char *x, int m, List L[]) {
             ell = k + 1;
         else
             setTransition(i - 1, k + 1, L);
-        while (cell != NULL) {
+        while (cell != NULL)
+        {
             k = cell->element;
             if (x[i] == x[k])
                 ell = k;
@@ -52,10 +69,11 @@ int preSimon(char *x, int m, List L[]) {
             cell = cell->next;
         }
     }
-    return(ell);
+    return (ell);
 }
 
-void SIMON(char *x, int m, char *y, int n) {
+void SIMON(char *x, int m, char *y, int n)
+{
     int j, ell, state;
     List L[XSIZE];
 
@@ -63,9 +81,11 @@ void SIMON(char *x, int m, char *y, int n) {
     ell = preSimon(x, m, L);
 
     // Searching
-    for (state = -1, j = 0; j < n; ++j) {
+    for (state = -1, j = 0; j < n; ++j)
+    {
         state = getTransition(x, m, state, L, y[j]);
-        if (state >= m - 1) {
+        if (state >= m - 1)
+        {
             OUTPUT(j - m + 1);
             state = ell;
         }

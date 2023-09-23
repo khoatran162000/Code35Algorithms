@@ -1,6 +1,10 @@
 // Boyer-Moore Algorithm
 
-void preBmBc(char *x, int m, int bmBc[]) {
+#define XSIZE 256
+#define ASIZE 256
+
+void preBmBc(char *x, int m, int bmBc[])
+{
     int i;
 
     for (i = 0; i < ASIZE; ++i)
@@ -9,15 +13,18 @@ void preBmBc(char *x, int m, int bmBc[]) {
         bmBc[x[i]] = m - i - 1;
 }
 
-void suffixes(char *x, int m, int *suff) {
+void suffixes(char *x, int m, int *suff)
+{
     int f, g, i;
 
     suff[m - 1] = m;
     g = m - 1;
-    for (i = m - 2; i >= 0; --i) {
+    for (i = m - 2; i >= 0; --i)
+    {
         if (i > g && suff[i + m - 1 - f] < i - g)
             suff[i] = suff[i + m - 1 - f];
-        else {
+        else
+        {
             if (i < g)
                 g = i;
             f = i;
@@ -28,7 +35,8 @@ void suffixes(char *x, int m, int *suff) {
     }
 }
 
-void preBmGs(char *x, int m, int bmGs[]) {
+void preBmGs(char *x, int m, int bmGs[])
+{
     int i, j, suff[XSIZE];
 
     suffixes(x, m, suff);
@@ -45,7 +53,8 @@ void preBmGs(char *x, int m, int bmGs[]) {
         bmGs[m - 1 - suff[i]] = m - 1 - i;
 }
 
-void BM(char *x, int m, char *y, int n) {
+void BM(char *x, int m, char *y, int n)
+{
     int i, j, bmGs[XSIZE], bmBc[ASIZE];
 
     // Preprocessing
@@ -54,9 +63,12 @@ void BM(char *x, int m, char *y, int n) {
 
     // Searching
     j = 0;
-    while (j <= n - m) {
-        for (i = m - 1; i >= 0 && x[i] == y[i + j]; --i);
-        if (i < 0) {
+    while (j <= n - m)
+    {
+        for (i = m - 1; i >= 0 && x[i] == y[i + j]; --i)
+            ;
+        if (i < 0)
+        {
             OUTPUT(j);
             j += bmGs[0];
         }

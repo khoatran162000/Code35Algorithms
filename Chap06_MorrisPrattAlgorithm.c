@@ -1,18 +1,23 @@
 // Morris-Pratt Algorithm
 
-void preMp(char *x, int m, int mpNext[]) {
+#define XSIZE 256
+
+void preMp(char *x, int m, int mpNext[])
+{
     int i, j;
 
     i = 0;
     j = mpNext[0] = -1;
-    while (i < m) {
-        while (J > -1 && x[i] != x[j])
+    while (i < m)
+    {
+        while (j > -1 && x[i] != x[j])
             j = mpNext[j];
         mpNext[++i] = ++j;
     }
 }
 
-void MP(char *x, int m, char *y, int n) {
+void MP(char *x, int m, char *y, int n)
+{
     int i, j, mpNext[XSIZE];
 
     // Preprocessing
@@ -20,12 +25,14 @@ void MP(char *x, int m, char *y, int n) {
 
     // Searching
     i = j = 0;
-    while (j < n) {
+    while (j < n)
+    {
         while (i > -1 && x[i] != y[j])
             i = mpNext[i];
         i++;
         j++;
-        if (i >= m) {
+        if (i >= m)
+        {
             OUTPUT(j - i);
             i = mpNext[i];
         }

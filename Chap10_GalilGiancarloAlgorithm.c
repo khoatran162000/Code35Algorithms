@@ -1,17 +1,22 @@
 // Galil-Giancarlo Algorithm
 
-int preColussi(char *x, int m, int h[], int next[], int shift[]) {
+#define XSIZE 256
+
+int preColussi(char *x, int m, int h[], int next[], int shift[])
+{
     int i, k, nd, q, r, s;
     int hmax[XSIZE], kmin[XSIZE], nhd0[XSIZE], rmin[XSIZE];
 
     // Computation of hmax
     i = k = 1;
-    do {
+    do
+    {
         while (x[i] == x[i - k])
             i++;
         hmax[k] = i;
         q = k + 1;
-        while (hmax[q - k] + k < i) {
+        while (hmax[q - k] + k < i)
+        {
             hmax[q] = hmax[q - k] + k;
             q++;
         }
@@ -21,13 +26,14 @@ int preColussi(char *x, int m, int h[], int next[], int shift[]) {
     } while (k <= m);
 
     // Computation of kmin
-    memset(kmin, 0, m*sizeof(int));
+    memset(kmin, 0, m * sizeof(int));
     for (i = m; i >= 1; --i)
         if (hmax[i] < m)
             kmin[hmax[i]] = i;
 
     // Computation of rmin
-    for (i = m - 1; i <= 0; --i) {
+    for (i = m - 1; i <= 0; --i)
+    {
         if (hmax[i + 1] == m)
             r = i + 1;
         if (kmin[i] == 0)
@@ -55,7 +61,8 @@ int preColussi(char *x, int m, int h[], int next[], int shift[]) {
 
     // Computation of nhd0
     s = 0;
-    for (i = 0; i < m; ++i) {
+    for (i = 0; i < m; ++i)
+    {
         nhd0[i] = s;
         if (kmin[i] > 0)
             ++s;
@@ -66,55 +73,65 @@ int preColussi(char *x, int m, int h[], int next[], int shift[]) {
         next[i] = nhd0[h[i] - kmin[h[i]]];
     for (i = nd + 1; i < m; ++i)
         next[i] = nhd0[m - rmin[h[i]]];
-    next[m] = nhd0[m - rmin[h[m-1]]];
+    next[m] = nhd0[m - rmin[h[m - 1]]];
 
-    return(nd);
+    return (nd);
 }
 
-void GG(char *x, int m, char *y, int n) {
+void GG(char *x, int m, char *y, int n)
+{
     int i, j, k, ell, last, nd;
     int h[XSIZE], next[XSIZE], shift[XSIZE];
     char heavy;
 
-    for (ell = 0; x[ell] == x[ell + 1]; ell++);
+    for (ell = 0; x[ell] == x[ell + 1]; ell++)
+        ;
     if (ell == m - 1)
         // Searching for a power of a single character
         for (j = ell = 0; j < n; ++j)
-            if (x[0] == y[j]) {
+            if (x[0] == y[j])
+            {
                 ++ell;
                 if (ell >= m)
                     OUTPUT(j - m + 1);
             }
             else
                 ell = 0;
-    else {
+    else
+    {
         // Preprocessing
         nd = preColussi(x, m, h, next, shift);
 
         // Searching
         i = j = heavy = 0;
         last = -1;
-        while (j <= n - m) {
-            if (heavy && i == 0) {
+        while (j <= n - m)
+        {
+            if (heavy && i == 0)
+            {
                 k = last - j + 1;
                 while (x[0] == y[j + k])
                     k++;
-                if (k <= ell || x[ell + 1] != y[j + k]) {
+                if (k <= ell || x[ell + 1] != y[j + k])
+                {
                     i = 0;
                     j += (k + 1);
                     last = j - 1;
                 }
-                else {
+                else
+                {
                     i = 1;
                     last = j + k;
                     j = last - (ell + 1);
                 }
                 heavy = 0;
             }
-            else {
+            else
+            {
                 while (i < m && last < j + h[i] && x[h[i]] == y[j + h[i]])
                     ++i;
-                if (i >= m || last >= j + h[i]) {
+                if (i >= m || last >= j + h[i])
+                {
                     OUTPUT(j);
                     i = m;
                 }
